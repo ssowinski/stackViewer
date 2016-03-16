@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B35F4DFC1C8F600600CDA596 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F4DFB1C8F600600CDA596 /* User.swift */; };
+		B35F4DFF1C8F805500CDA596 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F4DFE1C8F805500CDA596 /* Search.swift */; };
+		B35F4E011C941E3D00CDA596 /* extensionsString.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F4E001C941E3D00CDA596 /* extensionsString.swift */; };
+		B35F4E041C95E48800CDA596 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F4E031C95E48800CDA596 /* SearchTableViewCell.swift */; };
+		B39B3A371C7520870039C193 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = B39B3A361C7520870039C193 /* README.md */; };
 		B3D6F6131C70D7830029E4AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D6F6121C70D7830029E4AF /* AppDelegate.swift */; };
 		B3D6F6151C70D7830029E4AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D6F6141C70D7830029E4AF /* ViewController.swift */; };
-		B3D6F6181C70D7830029E4AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3D6F6161C70D7830029E4AF /* Main.storyboard */; };
 		B3D6F61A1C70D7830029E4AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3D6F6191C70D7830029E4AF /* Assets.xcassets */; };
 		B3D6F61D1C70D7830029E4AF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3D6F61B1C70D7830029E4AF /* LaunchScreen.storyboard */; };
 		B3D6F6281C70D7830029E4AF /* stackViewerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D6F6271C70D7830029E4AF /* stackViewerTests.swift */; };
+		B3EA72D61C712D3B0093C963 /* StackRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EA72D51C712D3B0093C963 /* StackRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,16 +31,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B35F4DFB1C8F600600CDA596 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		B35F4DFE1C8F805500CDA596 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
+		B35F4E001C941E3D00CDA596 /* extensionsString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = extensionsString.swift; sourceTree = "<group>"; };
+		B35F4E031C95E48800CDA596 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		B39B3A361C7520870039C193 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B3D6F60F1C70D7830029E4AF /* stackViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stackViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3D6F6121C70D7830029E4AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3D6F6141C70D7830029E4AF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		B3D6F6171C70D7830029E4AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B3D6F6191C70D7830029E4AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B3D6F61C1C70D7830029E4AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B3D6F61E1C70D7830029E4AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B3D6F6231C70D7830029E4AF /* stackViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = stackViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3D6F6271C70D7830029E4AF /* stackViewerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stackViewerTests.swift; sourceTree = "<group>"; };
 		B3D6F6291C70D7830029E4AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3EA72D51C712D3B0093C963 /* StackRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,9 +66,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B35F4DFD1C8F644600CDA596 /* stackexchange */ = {
+			isa = PBXGroup;
+			children = (
+				B35F4DFB1C8F600600CDA596 /* User.swift */,
+				B35F4DFE1C8F805500CDA596 /* Search.swift */,
+				B3EA72D51C712D3B0093C963 /* StackRequest.swift */,
+			);
+			name = stackexchange;
+			sourceTree = "<group>";
+		};
+		B35F4E021C941E7C00CDA596 /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B35F4E001C941E3D00CDA596 /* extensionsString.swift */,
+			);
+			name = extensions;
+			sourceTree = "<group>";
+		};
 		B3D6F6061C70D7830029E4AF = {
 			isa = PBXGroup;
 			children = (
+				B39B3A361C7520870039C193 /* README.md */,
 				B3D6F6111C70D7830029E4AF /* stackViewer */,
 				B3D6F6261C70D7830029E4AF /* stackViewerTests */,
 				B3D6F6101C70D7830029E4AF /* Products */,
@@ -77,12 +106,14 @@
 		B3D6F6111C70D7830029E4AF /* stackViewer */ = {
 			isa = PBXGroup;
 			children = (
+				B35F4E021C941E7C00CDA596 /* extensions */,
+				B35F4DFD1C8F644600CDA596 /* stackexchange */,
 				B3D6F6121C70D7830029E4AF /* AppDelegate.swift */,
 				B3D6F6141C70D7830029E4AF /* ViewController.swift */,
-				B3D6F6161C70D7830029E4AF /* Main.storyboard */,
 				B3D6F6191C70D7830029E4AF /* Assets.xcassets */,
 				B3D6F61B1C70D7830029E4AF /* LaunchScreen.storyboard */,
 				B3D6F61E1C70D7830029E4AF /* Info.plist */,
+				B35F4E031C95E48800CDA596 /* SearchTableViewCell.swift */,
 			);
 			path = stackViewer;
 			sourceTree = "<group>";
@@ -181,7 +212,6 @@
 			files = (
 				B3D6F61D1C70D7830029E4AF /* LaunchScreen.storyboard in Resources */,
 				B3D6F61A1C70D7830029E4AF /* Assets.xcassets in Resources */,
-				B3D6F6181C70D7830029E4AF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,8 +229,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B35F4E041C95E48800CDA596 /* SearchTableViewCell.swift in Sources */,
+				B35F4E011C941E3D00CDA596 /* extensionsString.swift in Sources */,
+				B3EA72D61C712D3B0093C963 /* StackRequest.swift in Sources */,
+				B35F4DFC1C8F600600CDA596 /* User.swift in Sources */,
 				B3D6F6151C70D7830029E4AF /* ViewController.swift in Sources */,
+				B39B3A371C7520870039C193 /* README.md in Sources */,
 				B3D6F6131C70D7830029E4AF /* AppDelegate.swift in Sources */,
+				B35F4DFF1C8F805500CDA596 /* Search.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,14 +259,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B3D6F6161C70D7830029E4AF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B3D6F6171C70D7830029E4AF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		B3D6F61B1C70D7830029E4AF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -390,6 +418,7 @@
 				B3D6F62E1C70D7830029E4AF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B3D6F62F1C70D7830029E4AF /* Build configuration list for PBXNativeTarget "stackViewerTests" */ = {
 			isa = XCConfigurationList;
@@ -398,6 +427,7 @@
 				B3D6F6311C70D7830029E4AF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

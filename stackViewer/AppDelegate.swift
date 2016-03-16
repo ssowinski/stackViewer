@@ -3,7 +3,7 @@
 //  stackViewer
 //
 //  Created by Slawomir Sowinski on 14.02.2016.
-//  Copyright © 2016 Slawomir Sowinski. All rights reserved.
+//  Copyright © 2016 SlawomiviewControllerr Sowinski. All rights reserved.
 //
 
 import UIKit
@@ -15,7 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        self.window = UIWindow()
+        
+        //let wordsListViewController = WordsListViewController(verbsModel: VerbsModel())
+        let viewController = ViewController()
+        let navigationViewController = UINavigationController(rootViewController : viewController)
+        self.window!.rootViewController = navigationViewController
+        self.window!.makeKeyAndVisible()
         return true
     }
 
