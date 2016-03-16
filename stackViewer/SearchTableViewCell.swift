@@ -30,13 +30,15 @@ class SearchTableViewCell: UITableViewCell {
     private var tagsLabels = [UILabel]()
     private var lastActivityDateLabel = UILabel()
     private let titleLabels = UILabel()
+    private let spinner = UIActivityIndicatorView()
     
     private struct Const {
         static let PlaceholderImageName = "placeholder"
         static let ScoreLabelPrefix = "Socore"
         static let AnswerLabelPrefix = "Answer"
         static let ViewsLabelPrefix = "Views"
-        static let UserImgHeightAndWidth: CGFloat = 40
+        static let UserImgHeightAndWidth: CGFloat = 48
+        static let AnimationDuration = 0.9
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -49,7 +51,25 @@ class SearchTableViewCell: UITableViewCell {
     }
     
     private func updateUI(){
-        userImage.image = UIImage(named: Const.PlaceholderImageName)
+        
+//        userImage.image = UIImage(named: Const.PlaceholderImageName)
+        
+        if let ownerProfileImageURL = search?.owner?.profileImage {
+            spinner.startAnimating()
+            let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+            dispatch_async(dispatch_get_global_queue(qos, 0), { () -> Void in
+                
+                if let imageData = NSData(contentsOfURL: ownerProfileImageURL) {
+            
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.userImage.image = UIImage(data: imageData)
+                        self.spinner.stopAnimating()
+                    })
+                    
+                }
+            })
+        }
+        
         userNameLabel.text = search?.owner?.displayName
         
         if let score = search?.score {
@@ -101,18 +121,18 @@ class SearchTableViewCell: UITableViewCell {
         contentView.addSubview(vavBlock)
         contentView.addSubview(dataAndTagBlock)
         userBlock.addSubview(userImage)
+        userBlock.addSubview(spinner)
         userBlock.addSubview(userNameLabel)
         vavBlock.addSubview(votesLabel)
         vavBlock.addSubview(answerLabel)
         vavBlock.addSubview(viewsLabel)
         let fillSpaceView = UIView()
         vavBlock.addSubview(fillSpaceView)
-        
-        
         //        dataAndTagBlock.addSubview(lastActivityDateLabel)
         //        dataAndTagBlock.addSubview(tagsCollectionView)
         contentView.addSubview(titleLabels)
         
+        spinner.color = UIColor.redColor()
         titleLabels.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
         titleLabels.lineBreakMode = .ByWordWrapping // or NSLineBreakMode.ByWordWrapping
         titleLabels.numberOfLines = 0
@@ -126,7 +146,7 @@ class SearchTableViewCell: UITableViewCell {
         }
         
         fillSpaceView.translatesAutoresizingMaskIntoConstraints = false
-        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
         userBlock.translatesAutoresizingMaskIntoConstraints = false
         vavBlock.translatesAutoresizingMaskIntoConstraints = false
         dataAndTagBlock.translatesAutoresizingMaskIntoConstraints = false
@@ -156,6 +176,11 @@ class SearchTableViewCell: UITableViewCell {
             userImage.widthAnchor.constraintEqualToConstant(Const.UserImgHeightAndWidth),
             userImage.heightAnchor.constraintEqualToConstant(Const.UserImgHeightAndWidth),
             userImage.trailingAnchor.constraintEqualToAnchor(userBlock.layoutMarginsGuide.trailingAnchor),
+            
+            spinner.centerXAnchor.constraintEqualToAnchor(userImage.centerXAnchor),
+            spinner.centerYAnchor.constraintEqualToAnchor(userImage.centerYAnchor),
+            spinner.widthAnchor.constraintEqualToAnchor(userImage.widthAnchor, multiplier: 0.5),
+            spinner.heightAnchor.constraintEqualToAnchor(spinner.widthAnchor),
             
             userNameLabel.topAnchor.constraintEqualToAnchor(userImage.bottomAnchor),
             userNameLabel.leadingAnchor.constraintEqualToAnchor(userBlock.layoutMarginsGuide.leadingAnchor),

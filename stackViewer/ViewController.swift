@@ -15,10 +15,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         static let EstimatedRowHeight: CGFloat = 100
         static let Title = "Stack Overflow Viewer"
         static let SearchText = "Szukaj..."
+        static let RefreshString = "Pull to refresh"
         static let RequestCount = 100
     }
     
     private let tableView = UITableView()
+    private let refreshControl = UIRefreshControl()
     private let searchBar = UISearchBar() //without UISearchController (we can use simple of UITextField)
     
     var searchResults = [[Search]]()
@@ -52,6 +54,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         performRequest()
     }
     
+    func refresh(sender: UIRefreshControl){
+        sender.endRefreshing()
+    }
+    
     private func performRequest() {
         request?.fetchData {
             (fetchedData, error) -> Void in
@@ -59,6 +65,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             dispatch_async(dispatch_get_main_queue()) {
                 
                 if let fetchedData = fetchedData {
+                    self.lastSuccessfulRequest = self.request
                     self.searchResults.insert(fetchedData, atIndex: 0)
                     self.tableView.reloadData()
                     self.tableView.setContentOffset(CGPointZero, animated: false)
@@ -77,11 +84,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         view.backgroundColor = UIColor.redColor()
         title = Const.Title
         
+        refreshControl.attributedTitle = NSAttributedString(string: Const.RefreshString)
+        refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        
+        tableView.addSubview(refreshControl)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerClass(SearchTableViewCell.self, forCellReuseIdentifier: Const.CellReusedIdentifier)
         tableView.estimatedRowHeight = Const.EstimatedRowHeight //verbsTableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
+        
         
         view.addSubview(tableView)
         
@@ -103,57 +115,22 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.tableHeaderView = searchBar
     }
     
-    
-    
-    
     // MARK: -UISearchBarDelegate Implemantation
-    
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
-        //        shouldShowSearchResults = true
-        //        tableView.reloadData()
-        print("searchBarTextDidBeginEditing")
+        searchBar.showsCancelButton = true
     }
     
-    
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        //        shouldShowSearchResults = false
-        //        tableView.reloadData()
         searchBar.resignFirstResponder()
-        print("searchBarCancelButtonClicked")
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        //        if !shouldShowSearchResults {
-        //            shouldShowSearchResults = true
-        //            tblSearchResults.reloadData()
-        //        }
-        print("searchBarSearchButtonClicked")
+        searchBar.showsCancelButton = false
         searchBar.resignFirstResponder()
         searchString = searchBar.text
-        print(searchString)
-        
     }
-    
-    // MARK: -UISearchResultsUpdating Implemantation
-    
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        let searchString = searchController.searchBar.text
-        print(searchString)
-        
-        // Filter the data array and get only those countries that match the search text.
-        //        filteredArray = dataArray.filter({ (country) -> Bool in
-        //            let countryText: NSString = country
-        //
-        //            return (countryText.rangeOfString(searchString, options: NSStringCompareOptions.CaseInsensitiveSearch).location) != NSNotFound
-        //        })
-        
-        // Reload the tableview.
-        //        tableView.reloadData()
-    }
-    
     
     // MARK: -UITableViewDataSource Implemantation
-    
     // number of sections is 1 by default
     func numberOfSectionsInTableView(tableView: UITableView) -> Int
     {

@@ -39,6 +39,7 @@ class StackRequest {
         static let DefaultSite = "stackoverflow"
         static let Separator = "&"
         static let SeparatorMethodAndParameters = "?"
+        static let LastActivityDate = "last_activity_date"
     }
     
     private let urlSession : NSURLSession
@@ -47,6 +48,8 @@ class StackRequest {
     private let requestMethod : RequestMethod
     //    private let idsString : String? //questions/{ids}?   (/2.2/questions/11222;2222;31222?order=desc&sort=reputation&site=stackoverflow)
     private var parameters = [String:String]()
+    private var minLastActivityDate: String? = nil
+    
     
     // designated initializer
     init (requestMethod: RequestMethod = RequestMethod.Search, ids: [Int]? = nil, pages: Int? = nil, pagesize: Int? = nil, order: OrdersType = OrdersType.Desc, sort: SortsType = SortsType.Activity ,site: String = Const.DefaultSite, intitle: String) {
@@ -65,7 +68,7 @@ class StackRequest {
         parameters[Const.Sort] = sort.rawValue
         parameters[Const.Intitle] = intitle
         parameters[Const.Site] = site
-    
+        
         sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
         //        sessionConfig.HTTPAdditionalHeaders = ["Accept": "application/json", "user_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"]
         urlSession = NSURLSession(configuration: sessionConfig)
@@ -123,8 +126,14 @@ class StackRequest {
                 if let arrayOfItems: AnyObject = response["items"] {
                     for searchDictonary in arrayOfItems as! [AnyObject] {
                         if let searchDictonary = searchDictonary as? [String: AnyObject] {
+                            
+                            if minLastActivityDate == nil {
+                                //                                minLastActivityDate = searchDictonary.valueForKey(Const.LastActivityDate) as? String
+                            }
+                            
                             if let searchObj = Search(data: searchDictonary) {
                                 searchResults.append(searchObj)
+                                
                             }
                         } else {
                             print("Not a dictionary")
@@ -151,7 +160,7 @@ class StackRequest {
         let components = NSURLComponents()
         //        components.scheme = Const.URLScheme
         components.host = Const.URLHost
-//        components.path = urlPath.rawValue
+        //        components.path = urlPath.rawValue
         
         
         return components.URL

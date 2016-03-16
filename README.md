@@ -179,6 +179,30 @@ let url = components.url
 
 >To go further into networking see Apple’s URL Loading System Programming >Guide and CFNetwork Programming Guide. 
 
-=======
-# stackViewer
+# Refresh Control
+```
+//declaration 
+let refreshControl = UIRefreshControl()
+
+//set up 
+refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+
+//add as subview to the tableView
+tableView.addSubview(refreshControl)
+
+//implement action 
+func refresh(sender: UIRefreshControl){
+    .
+    .
+    .
+    //remember to endRefreshing
+    sender.endRefreshing()
+}
+
+
+
+
+```
+
 

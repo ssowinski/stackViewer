@@ -49,7 +49,7 @@ struct Search : CustomStringConvertible {
         viewCount = data?[SearchApiKey.ViewCount] as? Int
         answerCount = data?[SearchApiKey.AnswerCount] as? Int
         score = data?[SearchApiKey.Score] as? Int
-        
+
         if let doubleLastActivityDate = data?[SearchApiKey.LastActivityDate] as? Double {
             lastActivityDate = NSDate(timeIntervalSince1970: doubleLastActivityDate)
         }
