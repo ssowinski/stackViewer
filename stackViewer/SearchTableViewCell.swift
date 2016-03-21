@@ -8,6 +8,16 @@
 
 import UIKit
 
+struct ImageCache {
+    static let sharedCache: NSCache = {
+        let cache = NSCache()
+        cache.name = "ImageCache"
+        cache.countLimit = 20 // Max 20 images in memory.
+        cache.totalCostLimit = 5*1024*1024 // Max 5MB used.
+        return cache
+    }()
+}
+
 class SearchTableViewCell: UITableViewCell {
     
     // MARK: - Model
@@ -51,24 +61,33 @@ class SearchTableViewCell: UITableViewCell {
     }
     
     private func updateUI(){
-        
 //        userImage.image = UIImage(named: Const.PlaceholderImageName)
         
         if let ownerProfileImageURL = search?.owner?.profileImage {
-            spinner.startAnimating()
-            let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
-            dispatch_async(dispatch_get_global_queue(qos, 0), { () -> Void in
+            if let cachedVersion = ImageCache.sharedCache.objectForKey(ownerProfileImageURL) as? NSData {
+                // use the cached version
+                self.userImage.image = UIImage(data: cachedVersion)
+            } else {
+                // create it from scratch then store in the cache
+                userImage.image = nil
+                spinner.startAnimating()
                 
-                if let imageData = NSData(contentsOfURL: ownerProfileImageURL) {
-            
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.userImage.image = UIImage(data: imageData)
-                        self.spinner.stopAnimating()
-                    })
+                let qos = Int(QOS_CLASS_USER_INITIATED.rawValue)
+                dispatch_async(dispatch_get_global_queue(qos, 0), { () -> Void in
                     
-                }
-            })
-        }
+                    if let imageData = NSData(contentsOfURL: ownerProfileImageURL) {
+                        
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            self.userImage.image = UIImage(data: imageData)
+                            self.spinner.stopAnimating()
+                            ImageCache.sharedCache.setObject(imageData, forKey: ownerProfileImageURL)
+                        })
+                        
+                    }
+                })
+
+            } //else
+        } //if let ownerProfileImageURL
         
         userNameLabel.text = search?.owner?.displayName
         
