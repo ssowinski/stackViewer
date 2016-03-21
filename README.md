@@ -200,9 +200,41 @@ func refresh(sender: UIRefreshControl){
     sender.endRefreshing()
 }
 
+```
 
+# NSCache
 
+Basic example of use
+```
+let cache = NSCache()
+let myObject: ExpensiveObjectClass
+
+if let cachedVersion = cache.objectForKey("CachedObject") as? ExpensiveObjectClass {
+    // use the cached version
+    myObject = cachedVersion
+} else {
+    // create it from scratch then store in the cache
+    myObject = ExpensiveObjectClass()
+    cache.setObject(myObject, forKey: "CachedObject")
+}
+```
+
+To share one instance of NSCatche between all UITableViewCell I've created singleton 
 
 ```
+struct ImageCache {
+    static let sharedCache: NSCache = {
+        let cache = NSCache()
+        cache.name = "ImageCache"
+        cache.countLimit = 20 // Max 20 images in memory.
+        cache.totalCostLimit = 5*1024*1024 // Max 5MB used.
+        return cache
+    }()
+}
+
+```
+
+
+
 
 
