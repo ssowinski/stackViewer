@@ -119,7 +119,7 @@ class SearchTableViewCell: UITableViewCell {
         
         titleLabels.text = search?.title
         
-        if let lastActivityDate = search?.lastActivityDate {
+        if let lastActivityDate = search?.creationDate {
             lastActivityDateLabel.text = "\(lastActivityDate.getString(.MediumStyle, timeFormatterStyle: .ShortStyle))"
         }
     }

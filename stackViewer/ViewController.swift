@@ -31,18 +31,18 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 //            searchBar.text = searchString
             searchResults.removeAll()
             tableView.reloadData()
-            performRequest()
+            performRequest(refreshControl)
         }
     }
     
     var lastSuccessfulRequest : StackRequest?
     
-    var request : StackRequest? {
+    var requestToPerform : StackRequest? {
         if lastSuccessfulRequest == nil {
             guard searchString != nil else { return nil }
             return StackRequest(intitle : searchString!)//, count: Const.RequestCount)
         } else {
-            return lastSuccessfulRequest
+            return lastSuccessfulRequest?.requestForNewer
         }
     }
     
@@ -51,29 +51,36 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         layoutUI()
         configureSearchBar()
         
-        performRequest()
+        performRequest(refreshControl)
     }
     
-    func refresh(sender: UIRefreshControl){
-        sender.endRefreshing()
-    }
-    
-    private func performRequest() {
-        request?.fetchData {
+    func performRequest(sender: UIRefreshControl){
+        
+        guard let request = requestToPerform else {
+            sender.endRefreshing()
+            return
+        }
+                
+        request.fetchData {
             (fetchedData, error) -> Void in
             
             dispatch_async(dispatch_get_main_queue()) {
                 
                 if let fetchedData = fetchedData {
-                    self.lastSuccessfulRequest = self.request
-                    self.searchResults.insert(fetchedData, atIndex: 0)
-                    self.tableView.reloadData()
-                    self.tableView.setContentOffset(CGPointZero, animated: false)
+                    self.lastSuccessfulRequest = request
+                    if !fetchedData.isEmpty {
+                        self.searchResults.insert(fetchedData, atIndex: 0)
+                        self.tableView.reloadData()
+                        self.tableView.setContentOffset(CGPointZero, animated: false)
+                    }
+                    
                 }
                 
                 if let error = error {
                     print(error)
                 }
+                
+                sender.endRefreshing()
             }
         }
     }
@@ -84,8 +91,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         view.backgroundColor = UIColor.redColor()
         title = Const.Title
         
-        refreshControl.attributedTitle = NSAttributedString(string: Const.RefreshString)
-        refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+//        refreshControl.attributedTitle = NSAttributedString(string: Const.RefreshString)
+        refreshControl.addTarget(self, action: #selector(ViewController.performRequest(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
         tableView.addSubview(refreshControl)
         tableView.delegate = self

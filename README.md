@@ -132,7 +132,9 @@ func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, d
 
 ### Structure of a URL
 A URL can be also be divided into pieces based on its structure. For example, the URL 
+
 ```https://johnny:p4ssw0rd@www.example.com:443/script.ext;param=value?query=value#ref``` 
+
 contains the following URL components:
 
 
@@ -149,6 +151,8 @@ contains the following URL components:
 |parameterString |   param=value            |
 |query           |   query=value            |
 |fragment        |   ref                    |
+---------------------------------------------
+
 
 In Foundation, URLs are represented by ```NSURL```.
 

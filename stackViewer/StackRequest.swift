@@ -40,6 +40,8 @@ class StackRequest {
         static let Separator = "&"
         static let SeparatorMethodAndParameters = "?"
         static let LastActivityDate = "last_activity_date"
+        static let CreationDate = "creation_date"
+        static let Min = "min"
     }
     
     private let urlSession : NSURLSession
@@ -48,11 +50,12 @@ class StackRequest {
     private let requestMethod : RequestMethod
     //    private let idsString : String? //questions/{ids}?   (/2.2/questions/11222;2222;31222?order=desc&sort=reputation&site=stackoverflow)
     private var parameters = [String:String]()
-    private var minLastActivityDate: String? = nil
     
+    private var minCreationDate: String? = nil //greater than this are the newly added
+    private var maxCreationDate: String? = nil //smaller then this are the older
     
     // designated initializer
-    init (requestMethod: RequestMethod = RequestMethod.Search, ids: [Int]? = nil, pages: Int? = nil, pagesize: Int? = nil, order: OrdersType = OrdersType.Desc, sort: SortsType = SortsType.Activity ,site: String = Const.DefaultSite, intitle: String) {
+    init (requestMethod: RequestMethod = RequestMethod.Search, ids: [Int]? = nil, pages: Int? = nil, pagesize: Int? = nil, order: OrdersType = OrdersType.Desc, sort: SortsType = SortsType.Creation ,site: String = Const.DefaultSite, intitle: String) {
         
         self.requestMethod = requestMethod
         
@@ -70,8 +73,19 @@ class StackRequest {
         parameters[Const.Site] = site
         
         sessionConfig = NSURLSessionConfiguration.defaultSessionConfiguration()
+        sessionConfig.timeoutIntervalForRequest = 20.0
+        sessionConfig.timeoutIntervalForResource = 30.0
         //        sessionConfig.HTTPAdditionalHeaders = ["Accept": "application/json", "user_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"]
         urlSession = NSURLSession(configuration: sessionConfig)
+    }
+    
+    var requestForNewer: StackRequest? {
+        return (minCreationDate != nil) ? modifiedRequestParameters(Const.Min, value: minCreationDate!) : nil
+    }
+    
+    private func modifiedRequestParameters(paramertrToChange:String, value:String) -> StackRequest{
+        parameters[paramertrToChange] = value
+        return self
     }
     
     func fetchData(completionHandler: ([Search]?, String?) -> Void) {
@@ -81,6 +95,7 @@ class StackRequest {
         }
         
         guard let url = NSURL(string: "\(Const.URLHost)\(requestMethod.rawValue)\(parametersToString(parameters))") else { return }
+        print(url)
         
         dataTask = urlSession.dataTaskWithURL(url) {
             data, response, error in
@@ -88,13 +103,10 @@ class StackRequest {
             if let error = error {
                 completionHandler(nil, error.localizedDescription)
             } else if let httpResponse = response as? NSHTTPURLResponse {
-                print(httpResponse.statusCode)
                 if httpResponse.statusCode == 200 {
-                    
-                    if let d = data {
-                        print(NSString(data: d, encoding: NSUTF8StringEncoding))
-                    }
-                    
+//                    if let d = data {
+//                        print(NSString(data: d, encoding: NSUTF8StringEncoding))
+//                    }
                     let result = self.paresResponseData(data)
                     completionHandler(result, nil)
                 }
@@ -123,12 +135,17 @@ class StackRequest {
             if let data = data, response = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject] {
                 //sprawdzić options: NSJSONReadingOptions(rawValue:0)NSJSONReadingOptions.AllowFragments
                 // Get the results array
-                if let arrayOfItems: AnyObject = response["items"] {
-                    for searchDictonary in arrayOfItems as! [AnyObject] {
+                if let arrayOfItems = response["items"] as? [AnyObject] {
+//                    minCreationDate = nil  //for test error response
+                    if !arrayOfItems.isEmpty { minCreationDate = nil } //if we have any item in response we set minCreationDate to nil
+                    for searchDictonary in arrayOfItems {
                         if let searchDictonary = searchDictonary as? [String: AnyObject] {
                             
-                            if minLastActivityDate == nil {
-                                //                                minLastActivityDate = searchDictonary.valueForKey(Const.LastActivityDate) as? String
+                            if minCreationDate == nil {
+                                    if let ldoub = searchDictonary[Const.CreationDate] as? Int {
+                                    minCreationDate = String(ldoub + 1)
+                                    print(minCreationDate!)
+                                }
                             }
                             
                             if let searchObj = Search(data: searchDictonary) {
