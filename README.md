@@ -133,7 +133,7 @@ func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, d
 ### Structure of a URL
 A URL can be also be divided into pieces based on its structure. For example, the URL 
 
-```https://johnny:p4ssw0rd@www.example.com:443/script.ext;param=value?query=value#ref``` 
+https://johnny:p4ssw0rd@www.example.com:443/script.ext;param=value?query=value#ref
 
 contains the following URL components:
 
@@ -238,6 +238,26 @@ struct ImageCache {
 
 ```
 
+#  Share Button - UIActivityViewController 
+
+```
+private func shareTextImageAndURL(sharingText: String?, sharingImage: UIImage? = nil, sharingURL: NSURL? = nil) {
+    var sharingItems = [AnyObject]()
+
+    if let text = sharingText {
+        sharingItems.append(text)
+    }
+    if let image = sharingImage {
+        sharingItems.append(image)
+    }
+    if let url = sharingURL {
+        sharingItems.append(url)
+    }
+
+    let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
+    self.presentViewController(activityViewController, animated: true, completion: nil)
+}
+```
 
 
 

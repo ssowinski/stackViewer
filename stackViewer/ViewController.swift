@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIPopoverPresentationControllerDelegate {
     
     private struct Const {
         static let CellReusedIdentifier = "CellReusedIdentifier"
@@ -17,6 +17,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         static let SearchText = "Szukaj..."
         static let RefreshString = "Pull to refresh"
         static let RequestCount = 100
+        static let popoverText = " to visit the website long press on the cell "
     }
     
     private let tableView = UITableView()
@@ -28,7 +29,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     private var searchString : String? = "ios" {
         didSet {
             lastSuccessfulRequest = nil
-//            searchBar.text = searchString
+            //            searchBar.text = searchString
             searchResults.removeAll()
             tableView.reloadData()
             performRequest(refreshControl)
@@ -60,7 +61,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             sender.endRefreshing()
             return
         }
-                
+        
         request.fetchData {
             (fetchedData, error) -> Void in
             
@@ -91,7 +92,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         view.backgroundColor = UIColor.redColor()
         title = Const.Title
         
-//        refreshControl.attributedTitle = NSAttributedString(string: Const.RefreshString)
+        let shareButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: #selector(ViewController.shareAction(_:)))
+        shareButton.tintColor = UIColor.blackColor()
+        let helpButton = UIBarButtonItem(title: "??", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ViewController.helpAction(_:)))
+        helpButton.tintColor = UIColor.blackColor()
+        navigationItem.setRightBarButtonItems([helpButton, shareButton], animated: true)
+        
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.longPressAction(_:)))
+        tableView.addGestureRecognizer(longPressGestureRecognizer)
+        
+        //        refreshControl.attributedTitle = NSAttributedString(string: Const.RefreshString)
         refreshControl.addTarget(self, action: #selector(ViewController.performRequest(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
         tableView.addSubview(refreshControl)
@@ -112,6 +122,50 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             tableView.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor),
             tableView.trailingAnchor.constraintEqualToAnchor(view.trailingAnchor)
             ])
+    }
+    
+    func longPressAction(gesture: UILongPressGestureRecognizer){
+        let point = gesture.locationInView(tableView)
+        guard let indexPath = tableView.indexPathForRowAtPoint(point) else {return}
+        if let url = searchResults[indexPath.section][indexPath.row].link {
+            UIApplication.sharedApplication().openURL(url)
+        }
+    }
+    
+    func shareAction(sender: UIBarButtonItem) {
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+        let txt = searchResults[indexPath.section][indexPath.row].title
+        let url = searchResults[indexPath.section][indexPath.row].link
+        shareTextImageAndURL(txt, sharingURL: url)
+        
+    }
+    
+    func helpAction(sender: UIBarButtonItem) {
+        let hintVC = HintViewController(text: Const.popoverText)
+        hintVC.modalPresentationStyle = .Popover
+        hintVC.preferredContentSize = CGSizeMake(50, 100)
+        let popc = hintVC.popoverPresentationController
+        popc?.delegate = self
+        popc?.barButtonItem = sender
+        
+        presentViewController(hintVC, animated: true, completion: nil)
+    }
+    
+    private func shareTextImageAndURL(sharingText: String?, sharingImage: UIImage? = nil, sharingURL: NSURL? = nil) {
+        var sharingItems = [AnyObject]()
+        
+        if let text = sharingText {
+            sharingItems.append(text)
+        }
+        if let image = sharingImage {
+            sharingItems.append(image)
+        }
+        if let url = sharingURL {
+            sharingItems.append(url)
+        }
+        
+        let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
+        self.presentViewController(activityViewController, animated: true, completion: nil)
     }
     
     private func configureSearchBar() {
@@ -154,11 +208,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return cell!
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let url = searchResults[indexPath.section][indexPath.row].link {
-            UIApplication.sharedApplication().openURL(url)
-        }
-    }
+    //    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    //        if let url = searchResults[indexPath.section][indexPath.row].link {
+    //            UIApplication.sharedApplication().openURL(url)
+    //        }
+    //    }
     
+    // MARK : -UIPopoverPresentationControllerDelegate implemantation
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.None
+    }
 }
 
